@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Book } from "../models/bookschema.model.js";
 
-// Add New Book
+// Add New Book Admin
 export const addNewBook = async (req, res) => {
   try {
     const {
