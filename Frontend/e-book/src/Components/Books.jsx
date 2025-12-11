@@ -1,50 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Bookcard from "./Bookcard";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
+import axios from "axios";
+import { BOOK_API_ENDPOINT} from "../utils/data";
+import { useDispatch, useSelector } from "react-redux";
+import { setAllBooks } from "./redux/bookSlice";
 
-const books = [
-  {
-    id: 1,
-    title: "Web Development",
-    price: 350,
-    oldPrice: 700,
-    image: "logo.png",
-  },
-  {
-    id: 2,
-    title: "UI/UX Basics",
-    price: 250,
-    oldPrice: 500,
-    image: "logo.png",
-  },
-  {
-    id: 3,
-    title: "Python Mastery",
-    price: 499,
-    oldPrice: 899,
-    image: "logo.png",
-  },
-  {
-    id: 4,
-    title: "JavaScript Pro",
-    price: 399,
-    oldPrice: 799,
-    image: "logo.png",
-  },
-  {
-    id: 5,
-    title: "DSA Handbook",
-    price: 299,
-    oldPrice: 599,
-    image: "logo.png",
-  },
-  { id: 6, title: "React Guide", price: 450, oldPrice: 900, image: "logo.png" },
-];
 
 const Books = () => {
+
+  const dispatch = useDispatch()
+  const {allBooks} = useSelector((store)=> store.books)
+  
+    useEffect(()=> {
+      const fetchBooks = async() => {
+        try{
+        const res = await axios.get(`${BOOK_API_ENDPOINT}/getAllBooks`,{
+          withCredentials: true
+        })
+        // console.log(res.data)
+
+        if(res.data.success){
+          dispatch(setAllBooks(res.data.books))
+        }
+        else {
+          console.log("failed to fetch books")
+        }
+      } catch(error){
+        console.log(error)
+      }
+      }
+      fetchBooks();
+
+    }, [dispatch])
+
+
   return (
     <div>
       <Navbar />
@@ -57,13 +50,13 @@ const Books = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mt-6">
-          {books.slice(0, 6).map((item) => (
+          {allBooks.slice(0, 6).map((job) => (
             <Bookcard
-              key={item.id}
-              image={item.image}
-              title={item.title}
-              price={item.price}
-              oldPrice={item.oldPrice}
+              key={job._id}
+              // image={allBooks.image}
+              title={job.title}
+              price={job.price}
+              oldPrice={job.oldPrice}
             />
           ))}
         </div>

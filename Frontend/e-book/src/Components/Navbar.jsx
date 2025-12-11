@@ -1,14 +1,38 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, Navigate, NavLink, useNavigate } from "react-router-dom";
 import { ShoppingCart, User, BookOpen, LogOut, User2 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { USER_API_ENDPOINT } from "../utils/data";
+import axios from "axios";
+import { toast } from "sonner";
+import { setUser } from "./redux/authSlice";
 
 const Navbar = () => {
   const { user } = useSelector((store) => store.user);
+  // console.log(user)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const logoutHandler = async() => {
+    try{
+      const res = await axios.post(`${USER_API_ENDPOINT}/logout`,{}, {
+        withCredentials: true,
+      })
+      if(res.data.success){
+        dispatch(setUser(null))
+        navigate("/")
+        toast.success(res.data.message)
+      }
+
+    } catch(error){
+      console.log(error.message)
+      toast.error("Error logging out. Please try again.");
+    }
+  }
 
   return (
     <nav
@@ -85,7 +109,7 @@ const Navbar = () => {
                       <AvatarImage src="logo.png" alt="@shadcn" />
                     </Avatar>
                     <div>
-                      <h3 className="font-medium">Milan Gauswami</h3>
+                      <h3 className="font-medium">{user.fullname}</h3>
                       {/* <p className="text-sm text-muted-foreground">Student</p> */}
                     </div>
                   </div>
@@ -101,7 +125,7 @@ const Navbar = () => {
 
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <LogOut></LogOut>
-                      <Button variant="link">Logout</Button>
+                      <Button onClick={logoutHandler} variant="link">Logout</Button>
                     </div>
                   </div>
                 </PopoverContent>

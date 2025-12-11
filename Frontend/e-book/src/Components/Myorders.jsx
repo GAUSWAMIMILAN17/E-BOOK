@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Ordercard from './Ordercard';
+import { ORDER_API_ENDPOINT } from '../utils/data';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Myorders = () => {
+  const dispatch = useDispatch()
+  const {user} = useSelector((store)=> store.user)
+  // console.log(user)
+
+  useEffect(()=> {
+    const fetchPlacedBook = async() => {
+      const res = await axios.post(`${ORDER_API_ENDPOINT}/myOrders`, {
+        withCredentials: true
+      })
+      // console.log("API Response:",res.data)
+      if(res.data.success){
+        // dispatch(setAllMyOrders(res.data.))
+      }
+    }
+  }, [])
   return (
     <div>
         <Navbar />

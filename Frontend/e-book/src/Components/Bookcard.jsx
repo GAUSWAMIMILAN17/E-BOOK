@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from './ui/button';
 
-const Bookcard = ({ image, title, price, oldPrice }) => {
+const Bookcard = ({ title, price, oldPrice }) => {
+
   return (
     <div className='my-3 w-75 rounded-xl border transition-shadow duration-300 hover:shadow-xl'>
       <div className='bg-[#f5f5f5] rounded-t-xl overflow-hidden'>
-        <img src={image} className='object-cover w-full h-48 transform transition duration-300 ease-in-out hover:scale-110' />
+        <img src="logo.png" className='object-cover w-full h-48 transform transition duration-300 ease-in-out hover:scale-110' />
       </div>
 
       <div className='p-3'>
